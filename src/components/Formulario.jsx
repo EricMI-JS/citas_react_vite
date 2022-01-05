@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Error from "./Error";
 
-function Formulario({ pacientes, paciente, setPacientes }) {
+function Formulario({ pacientes, paciente, setPacientes, setPaciente }) {
   const [nombre, setNombre] = useState("");
   const [propietario, setPropietario] = useState("");
   const [email, setEmail] = useState("");
@@ -43,10 +43,21 @@ function Formulario({ pacientes, paciente, setPacientes }) {
       email,
       fecha,
       sintomas,
-      id: generarId(),
     };
 
-    setPacientes([...pacientes, objetoPaciente]);
+    if (paciente.id) {
+      // Editando el Registro
+      objetoPaciente.id = paciente.id;
+      const pacientesActualizados = pacientes.map((pacienteState) =>
+        pacienteState.id === paciente.id ? objetoPaciente : pacienteState
+      );
+      setPacientes(pacientesActualizados);
+      setPaciente({});
+    } else {
+      // Nuevo Registro
+      objetoPaciente.id = generarId();
+      setPacientes([...pacientes, objetoPaciente]);
+    }
 
     // Reinicar el form
     setNombre("");
